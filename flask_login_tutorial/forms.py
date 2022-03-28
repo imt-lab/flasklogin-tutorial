@@ -1,7 +1,7 @@
 """Sign-up & log-in forms."""
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional
+from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, ValidationError
 
 
 class SignupForm(FlaskForm):
@@ -42,3 +42,11 @@ class LoginForm(FlaskForm):
     )
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Log In")
+
+    def validate_email(self, email):
+        import re
+        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+        print(email.data)
+        if not re.fullmatch(regex, email.data):
+            # return False 
+            return ValidationError("Email Invaild")
