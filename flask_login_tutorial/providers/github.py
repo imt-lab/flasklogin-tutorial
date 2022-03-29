@@ -1,15 +1,16 @@
+import json
 from flask import request, session, redirect, url_for, current_app
 
-from .base import authlib_oauth_client
+from .. import authlib_oauth_client
 
 
 settings = {
-    'github_oauth_key': '',
-    'github_oauth_secret': '',
-    'github_oauth_scope': 'user:repo',
+    'github_oauth_key': 'fca39987737923359b63',
+    'github_oauth_secret': '9b87977bf3e3052eba3a4bfc4aa4f588523051d1',
+    'github_oauth_scope': 'user:email',
     'github_oauth_api_url': 'https://api.github.com/',
     'github_oauth_token_url': 'https://github.com/login/oauth/access_token',
-    'github_oauth_authorize_url': 'https://github.com/login/oauth/',
+    'github_oauth_authorize_url': 'https://github.com/login/oauth/authorize',
 }
 
 
@@ -44,6 +45,6 @@ def github_oauth():
             return 'Access denied: reason=%s error=%s' % (
                 request.args['error'], request.args['error_description'])
         session['github_token'] = (token)
-        return redirect(url_for('index.login'))
+        return redirect(url_for('auth_bp.login'))
 
     return github

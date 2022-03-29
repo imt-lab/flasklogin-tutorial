@@ -3,10 +3,13 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
+from authlib.integrations.flask_client import OAuth
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 sess = Session()
+
+authlib_oauth_client = OAuth()
 
 def create_app():
     """Construct the core app object."""
@@ -17,6 +20,8 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     sess.init_app(app)
+    
+    authlib_oauth_client.init_app(app)
 
     with app.app_context():
         from . import auth, routes

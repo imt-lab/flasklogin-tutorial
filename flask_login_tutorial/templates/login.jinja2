@@ -48,7 +48,9 @@
       <div class="submit-button">
         {{ form.submit }}
       </div>
-
+      <div class="login-signup">
+        <span><a href="{{ url_for('auth_bp.login_github') }}">GitHub</a></span>
+      </div>
       <div class="login-signup">
         <span>Don't have an account? <a href="{{ url_for('auth_bp.signup') }}">Sign up.</a></span>
       </div>
