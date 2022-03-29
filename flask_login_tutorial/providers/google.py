@@ -5,6 +5,15 @@ from flask_login import login_user
 from .. import authlib_oauth_client
 from ..models import User, db
 
+""" ===== Steps create client id, client secret
+1. Access to https://console.cloud.google.com/
+2. Create new Project XXX
+3. Select Project XXX -> OAuth consent screen: create new
+4. Select Project XXX -> Credentials:
+    - Click button `CREATE CREDENTIALS` -> OAuth client ID
+    - Select Appication type: Web application
+"""
+
 settings = {
     'google_oauth_client_id': '799891405851-nja673g09c7c28stpp8n2ilpn653lk5h.apps.googleusercontent.com',
     'google_oauth_client_secret': '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',
