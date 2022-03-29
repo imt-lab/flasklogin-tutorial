@@ -8,8 +8,10 @@ from .forms import LoginForm, SignupForm
 from .models import User, db
 
 from .providers.github import github_oauth
+from .providers.google import google_oauth
 
 github = None
+google = None
 
 # Blueprint Configuration
 auth_bp = Blueprint(
@@ -19,7 +21,9 @@ auth_bp = Blueprint(
 @auth_bp.before_app_first_request
 def register_modules():
     global github
+    global google
     github = github_oauth()
+    google = google_oauth()
 
 
 @auth_bp.route("/signup", methods=["GET", "POST"])
@@ -55,7 +59,12 @@ def signup():
 def login_github():
     redirect_uri = url_for('github_authorized', _external=True)
     return github.authorize_redirect(redirect_uri)
-    
+
+@auth_bp.route("/google-github")
+def login_google():
+    redirect_uri = url_for('google_authorized', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     """

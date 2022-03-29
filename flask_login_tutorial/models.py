@@ -13,9 +13,9 @@ class User(UserMixin, db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=False)
-    email = db.Column(db.String(40), unique=True, nullable=False)
+    email = db.Column(db.String(40), unique=False, nullable=False)
     level = db.Column(db.SmallInteger, nullable=False, default=0)
-    login_type = db.Column(db.String(40), unique=True, nullable=False, default='local')
+    login_type = db.Column(db.String(40), unique=False, nullable=False, default='local')
     otp_secret = db.Column(db.String(16))
     password = db.Column(
         db.String(200), primary_key=False, unique=False, nullable=True
