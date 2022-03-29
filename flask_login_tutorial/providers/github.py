@@ -1,8 +1,8 @@
 import json
 from flask import request, session, redirect, url_for, current_app
-
+from flask_login import login_user
 from .. import authlib_oauth_client
-
+from ..models import User, db
 
 settings = {
     'github_oauth_key': 'fca39987737923359b63',
@@ -45,6 +45,25 @@ def github_oauth():
             return 'Access denied: reason=%s error=%s' % (
                 request.args['error'], request.args['error_description'])
         session['github_token'] = (token)
-        return redirect(url_for('auth_bp.login'))
+
+        # print(session)
+        me = json.loads(github.get('user').text)
+        # print(me)
+        github_username = me['login']
+        github_email = me['email']
+        print(github_email)
+
+        existing_user = User.query.filter_by(
+            email=github_email, login_type='github').first()
+        print(existing_user)
+        if existing_user is None:
+            user = User(
+                name=github_username, email=github_email, login_type='github')
+            db.session.add(user)
+            db.session.commit()  # Create new user
+            login_user(user)
+        else:
+            login_user(existing_user)
+        return redirect(url_for("main_bp.dashboard"))
 
     return github

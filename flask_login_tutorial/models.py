@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     login_type = db.Column(db.String(40), unique=True, nullable=False, default='local')
     otp_secret = db.Column(db.String(16))
     password = db.Column(
-        db.String(200), primary_key=False, unique=False, nullable=False
+        db.String(200), primary_key=False, unique=False, nullable=True
     )
     website = db.Column(db.String(60), index=False,
                         unique=False, nullable=True)
@@ -36,4 +36,4 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return "<User {}>".format(self.username)
+        return "<User {}>".format(self.name)

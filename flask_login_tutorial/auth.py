@@ -64,14 +64,6 @@ def login():
     GET requests serve Log-in page.
     POST requests validate and redirect user to dashboard.
     """
-    if 'github_token' in session:
-        print(session)
-        me = json.loads(github.get('user').text)
-        print(me)
-        github_username = me['login']
-        github_name = me['name']
-        github_email = me['email']
-        print(github_email)
     
     # Bypass if user is logged in
     if current_user.is_authenticated:
@@ -80,7 +72,7 @@ def login():
     form = LoginForm()
     # Validate login attempt
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data, login_type='local').first()
         if user and user.check_password(password=form.password.data):
             login_user(user)
             next_page = request.args.get("next")
