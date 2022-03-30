@@ -5,10 +5,11 @@ from flask_login import current_user, login_user
 
 from . import login_manager
 from .forms import LoginForm, SignupForm
-from .models import User, db
+from .models.iam.user import User, db
 
-from .providers.github import github_oauth
-from .providers.google import google_oauth
+from .providers.iam.github import github_oauth
+from .providers.iam.google import google_oauth
+from .services.iam.auth import signup as iam_signup
 
 github = None
 google = None
@@ -36,17 +37,28 @@ def signup():
     """
     form = SignupForm()
     if form.validate_on_submit():
-        existing_user = User.query.filter_by(email=form.email.data).first()
-        if existing_user is None:
+        username=form.name.data
+        email=form.email.data
+        password=form.password.data
+        msg = iam_signup(username=username, email=email, password=password)
+        if not len(msg):
             user = User(
-                name=form.name.data, email=form.email.data, website=form.website.data
+                username=username, email=email, password=password
             )
-            user.set_password(form.password.data)
-            db.session.add(user)
-            db.session.commit()  # Create new user
             login_user(user)  # Log in as newly created user
             return redirect(url_for("main_bp.dashboard"))
-        flash("A user already exists with that email address.")
+        
+        # existing_user = User.query.filter_by(email=form.email.data).first()
+        # if existing_user is None:
+        #     user = User(
+        #         name=form.name.data, email=form.email.data, website=form.website.data
+        #     )
+        #     user.set_password(form.password.data)
+        #     db.session.add(user)
+        #     db.session.commit()  # Create new user
+        #     login_user(user)  # Log in as newly created user
+        #     return redirect(url_for("main_bp.dashboard"))
+        flash(msg)
     return render_template(
         "signup.jinja2",
         title="Create an Account.",

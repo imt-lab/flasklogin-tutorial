@@ -27,3 +27,4 @@ redis
 
 Authlib==0.15
 requests
+pyotp

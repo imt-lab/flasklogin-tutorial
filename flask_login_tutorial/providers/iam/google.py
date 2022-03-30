@@ -2,8 +2,8 @@ import json
 from flask import request, session, redirect, url_for, current_app
 
 from flask_login import login_user
-from .. import authlib_oauth_client
-from ..models import User, db
+from ... import authlib_oauth_client
+from ...models.iam.user import User, db
 
 """ ===== Steps create client id, client secret
 1. Access to https://console.cloud.google.com/
