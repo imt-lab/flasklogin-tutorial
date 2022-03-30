@@ -9,7 +9,9 @@ class User(UserMixin, db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
-    password = db.Column(db.String(64))
+    password = db.Column(
+        db.String(200), primary_key=False, unique=False, nullable=True
+    )
     level = db.Column(db.SmallInteger, nullable=False, default=0)
     login_type = db.Column(db.String(40), unique=False, nullable=False, default='local')
     firstname = db.Column(db.String(64))
@@ -19,7 +21,7 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.SmallInteger, nullable=False, default=0)
     is_active = db.Column(db.SmallInteger, nullable=False, default=0)   # 0 - deactive; 1 - active
     deleted = db.Column(db.SmallInteger, nullable=False, default=0)     # 0 - existing, 1 - deleted
-    tenant_uuid = db.Column(db.String(64), nullable=False)
+    tenant_id = db.Column(db.Integer, db.ForeignKey('tenant.id'))
     created_on = db.Column(db.DateTime, index=False, unique=False, nullable=True)
     last_login = db.Column(db.DateTime, index=False, unique=False, nullable=True)
 

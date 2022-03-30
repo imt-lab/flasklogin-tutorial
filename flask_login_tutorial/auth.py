@@ -42,10 +42,11 @@ def signup():
         password=form.password.data
         msg = iam_signup(username=username, email=email, password=password)
         if not len(msg):
-            user = User(
-                username=username, email=email, password=password
-            )
-            login_user(user)  # Log in as newly created user
+            # user = User(
+            #     username=username, email=email
+            # )
+            # login_user(user)  # Log in as newly created user
+            print("hehhe")
             return redirect(url_for("main_bp.dashboard"))
         
         # existing_user = User.query.filter_by(email=form.email.data).first()
@@ -95,6 +96,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data, login_type='local').first()
         if user and user.check_password(password=form.password.data):
+            print('login.....')
             login_user(user)
             next_page = request.args.get("next")
             return redirect(next_page or url_for("main_bp.dashboard"))

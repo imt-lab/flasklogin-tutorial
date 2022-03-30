@@ -6,14 +6,15 @@ from ...models.iam.tenant import Tenant
 from ...models.iam.group import Group
 from ...models.iam import USER_LEVEL_TENANT_ADMIN
 
+def delete_tenant_by_id(id):
+    """Delete tenant by id"""
+    print("deleting...")
+    User.query.filter_by(id=id).delete()
+    db.session.commit()
+    
 def signup(username: str, email: str, password: str) -> str:
-    """Signup
-
-    Args:
-        username (str): _description_
-        email (str): _description_
-        password (str): _description_
-    """
+    """Signup"""
+    
     msg = ''
     existing_user = User.query.filter_by(username=username, 
                                          email=email,
@@ -21,6 +22,7 @@ def signup(username: str, email: str, password: str) -> str:
                                          login_type='local', 
                                          deleted=0).first()
     if existing_user is None:
+        tenant_id = None
         try:
             # 1. Create new tenant 
             tenant_uuid = uuid.uuid4().hex
@@ -30,14 +32,17 @@ def signup(username: str, email: str, password: str) -> str:
                 description='Tenant\'s {}'.format(email)
             )
             db.session.add(tenant)
+            db.session.commit()
+            db.session.refresh(tenant)
+            tenant_id = tenant.id
             
             # 2. Create new user with level: tenant admin
             user = User(
                 username=username, 
                 email=email, 
                 level=USER_LEVEL_TENANT_ADMIN,
-                local_type='local',
-                tenant_uuid=tenant_uuid
+                logic_type='local',
+                tenant_id=tenant_id
             )
             user.set_password(password)
             db.session.add(user)
@@ -46,15 +51,18 @@ def signup(username: str, email: str, password: str) -> str:
             group = Group(
                 name='admin',
                 description='admin group',
-                tenant_uuid=tenant_uuid
+                tenant_id=tenant_id
             )
             db.session.add(group)
             
             db.session.commit()
+            
         except Exception as e:
             print(e)
             db.session.rollback()
             msg = 'Create user error'
+        if tenant_id:
+            delete_tenant_by_id(tenant_id)
     else:
         msg = 'User existed'
     
