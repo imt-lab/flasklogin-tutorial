@@ -1,4 +1,4 @@
-from ... import db
+from .... import db
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 import pyotp
@@ -28,6 +28,12 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {0}>'.format(self.username)
+
+    def is_authenticated(self):
+        return True
+    
+    def is_active(self):
+        return True
 
     def get_totp_uri(self):
         return "otpauth://totp/PowerDNS-Admin:{0}?secret={1}&issuer=PowerDNS-Admin".format(

@@ -1,4 +1,4 @@
-from ... import db
+from .... import db
 
 class Tenant(db.Model):
     

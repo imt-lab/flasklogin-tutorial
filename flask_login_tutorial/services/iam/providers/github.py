@@ -1,8 +1,8 @@
 import json
 from flask import request, session, redirect, url_for, current_app
 from flask_login import login_user
-from ... import authlib_oauth_client
-from ...models.iam.user import User, db
+from .... import authlib_oauth_client
+from ..models.user import User, db
 
 settings = {
     'github_oauth_key': 'fca39987737923359b63',

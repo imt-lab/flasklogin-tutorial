@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from authlib.integrations.flask_client import OAuth
+ 
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -24,12 +25,15 @@ def create_app():
     authlib_oauth_client.init_app(app)
 
     with app.app_context():
-        from . import auth, routes
+        
+        from .routes import main
+        from .services.iam import routes as iam
+        
         from .assets import compile_static_assets
 
         # Register Blueprints
-        app.register_blueprint(routes.main_bp)
-        app.register_blueprint(auth.auth_bp)
+        app.register_blueprint(main.main_bp)
+        app.register_blueprint(iam.iam_bp)
 
         # Create Database Models
         db.create_all()

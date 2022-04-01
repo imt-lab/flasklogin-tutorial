@@ -1,10 +1,12 @@
 
 import uuid
-from ... import db
-from ...models.iam.user import User
-from ...models.iam.tenant import Tenant
-from ...models.iam.group import Group
-from ...models.iam import USER_LEVEL_TENANT_ADMIN
+from .... import db
+from ..models.user import User
+from ..models.tenant import Tenant
+from ..models.group import Group
+from ..models import USER_LEVEL_TENANT_ADMIN
+
+from flask_login import login_user
 
 def delete_tenant_by_id(id):
     """Delete tenant by id"""
@@ -41,7 +43,7 @@ def signup(username: str, email: str, password: str) -> str:
                 username=username, 
                 email=email, 
                 level=USER_LEVEL_TENANT_ADMIN,
-                logic_type='local',
+                login_type='local',
                 tenant_id=tenant_id
             )
             user.set_password(password)
@@ -57,12 +59,14 @@ def signup(username: str, email: str, password: str) -> str:
             
             db.session.commit()
             
+            login_user(user)
+            
         except Exception as e:
             print(e)
             db.session.rollback()
             msg = 'Create user error'
-        if tenant_id:
-            delete_tenant_by_id(tenant_id)
+            if tenant_id:
+                delete_tenant_by_id(tenant_id)
     else:
         msg = 'User existed'
     

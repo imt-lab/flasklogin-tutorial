@@ -1,4 +1,4 @@
-
+"""IAM Models"""
 
 USER_LEVEL_NORMAL = 1
 USER_LEVEL_TENANT_ADMIN = 2
