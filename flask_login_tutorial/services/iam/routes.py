@@ -9,7 +9,7 @@ from .models.user import User
 
 from .providers.github import github_oauth
 from .providers.google import google_oauth
-from .auth.core import signup as auth_signup
+from .auth.signup import signup as auth_signup
 
 github = None
 google = None
