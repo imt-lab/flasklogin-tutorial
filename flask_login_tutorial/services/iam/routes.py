@@ -1,17 +1,27 @@
 """Routes for user authentication."""
 import json
 
-from flask import Blueprint, flash, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint,
+    flash,
+    jsonify,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user, login_user
 
 from ... import login_manager
+from .auth.core import api_login_required
 from .auth.login import login_local
 from .auth.signup import signup as auth_signup
+from .authorize.core import UserManager
 from .forms import LoginForm, SignupForm
 from .providers.github import github_oauth
 from .providers.google import google_oauth
-
-from .authorize.core import UserManager
 
 github = None
 google = None
@@ -110,3 +120,10 @@ def unauthorized():
     """Redirect unauthorized users to Login page."""
     flash("You must be logged in to view that page.")
     return redirect(url_for("iam_bp.login"))
+
+
+@iam_bp.route("/api/v1/users", methods=["GET"])
+@api_login_required
+def list_users():
+    users = UserManager().list_users()
+    return make_response(jsonify(users))

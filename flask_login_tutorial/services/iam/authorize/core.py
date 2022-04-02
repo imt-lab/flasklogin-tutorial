@@ -1,32 +1,34 @@
 from functools import wraps
-from flask_login import current_user
+
 from flask import current_app
+from flask_login import current_user
+
+from ..models.user import User
 
 
 def admin_tenant_required(func):
-
     @wraps(func)
     def decorated_view(*args, **kwargs):
         print(current_user.level)
         if current_user.level not in [1, 2]:
             # return current_app.login_manager.unauthorized()
-            print('you not allow this action')
+            print("you not allow this action")
         return func(*args, **kwargs)
+
     return decorated_view
 
 
 def super_admin_required(func):
-
     @wraps(func)
     def decorated_view(*args, **kwargs):
         if current_user.level == 2:
-            print('you not allow this action')
+            print("you not allow this action")
         return func(*args, **kwargs)
+
     return decorated_view
 
 
 class UserManager:
-
     def __init__(self):
         pass
 
@@ -55,26 +57,35 @@ class UserManager:
 
     @admin_tenant_required
     def list_users(self):
-        pass
+        if current_user.level == 1:
+            users = User.query.filter_by(
+                tenant_id=current_user.tenant_id, is_active=1, deleted=0
+            )
+            if users:
+                results = [user.to_json() for user in users]
+                return results
 
     def change_password(self):
         pass
 
+    def add_api_key(self):
+        pass
+
+    def del_api_key(self):
+        pass
+
 
 class GroupManager:
-
     def __init__(self):
         pass
 
 
 class RoleManager:
-
     def __init__(self):
         pass
 
 
 class TenantManager:
-
     def __init__(self):
         pass
 
@@ -100,7 +111,6 @@ class TenantManager:
 
 
 class GroupRoleManager:
-
     def __init__(self):
         pass
 
@@ -114,7 +124,6 @@ class GroupRoleManager:
 
 
 class GroupUserManager:
-
     def __init__(self):
         pass
 

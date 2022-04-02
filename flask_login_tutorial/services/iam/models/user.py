@@ -18,6 +18,7 @@ class User(UserMixin, db.Model):
     lastname = db.Column(db.String(64))
     email = db.Column(db.String(128))
     otp_secret = db.Column(db.String(16))
+    api_key = db.Column(db.String(128))
     confirmed = db.Column(db.SmallInteger, nullable=False, default=0)
     is_active = db.Column(
         db.SmallInteger, nullable=False, default=0
@@ -28,6 +29,22 @@ class User(UserMixin, db.Model):
     tenant_id = db.Column(db.Integer, db.ForeignKey("tenant.id"))
     created_on = db.Column(db.DateTime, index=False, unique=False, nullable=True)
     last_login = db.Column(db.DateTime, index=False, unique=False, nullable=True)
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "level": self.level,
+            "login_type": self.login_type,
+            "firstname": self.firstname,
+            "lastname": self.lastname,
+            "email": self.email,
+            "otp_secret": self.otp_secret,
+            "api_key": self.api_key,
+            "is_active": self.is_active,
+            "created_on": self.created_on,
+            "last_login": self.last_login,
+        }
 
     def __repr__(self):
         return "<User {0}>".format(self.username)
