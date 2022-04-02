@@ -1,7 +1,7 @@
 """Flask app configuration."""
 from os import environ, path
-import redis
 
+import redis
 from dotenv import load_dotenv
 
 basedir = path.abspath(path.dirname(__file__))
@@ -31,5 +31,5 @@ class Config:
     COMPRESSOR_DEBUG = environ.get("COMPRESSOR_DEBUG")
 
     # Flask-Session
-    SESSION_TYPE = environ.get('SESSION_TYPE')
-    SESSION_REDIS = redis.from_url(environ.get('SESSION_REDIS'))
+    SESSION_TYPE = environ.get("SESSION_TYPE")
+    SESSION_REDIS = redis.from_url(environ.get("SESSION_REDIS"))

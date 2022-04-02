@@ -1,5 +1,5 @@
 """Logged-in page routes."""
-from flask import Blueprint, redirect, render_template, url_for, session
+from flask import Blueprint, redirect, render_template, session, url_for
 from flask_login import current_user, login_required, logout_user
 
 # Blueprint Configuration
@@ -13,7 +13,7 @@ main_bp = Blueprint(
 def dashboard():
     """Logged-in User Dashboard."""
 
-    session['redis_test'] = 'This is a session variable.'
+    session["redis_test"] = "This is a session variable."
 
     return render_template(
         "dashboard.jinja2",
@@ -32,13 +32,13 @@ def logout():
     return redirect(url_for("iam_bp.login"))
 
 
-@main_bp.route('/session', methods=['GET'])
+@main_bp.route("/session", methods=["GET"])
 @login_required
 def session_view():
     """Display session variable value."""
     return render_template(
-        'session.jinja2',
-        title='Flask-Session Tutorial.',
-        template='dashboard-template',
-        session_variable=str(session['redis_test'])
+        "session.jinja2",
+        title="Flask-Session Tutorial.",
+        template="dashboard-template",
+        session_variable=str(session["redis_test"]),
     )
