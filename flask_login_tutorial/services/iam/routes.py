@@ -11,6 +11,8 @@ from .forms import LoginForm, SignupForm
 from .providers.github import github_oauth
 from .providers.google import google_oauth
 
+from .authorize.core import UserManager
+
 github = None
 google = None
 
@@ -77,6 +79,8 @@ def login():
 
     # Bypass if user is logged in
     if current_user.is_authenticated:
+        print(current_user.__dict__)
+        UserManager().disable_user()
         return redirect(url_for("main_bp.dashboard"))
 
     form = LoginForm()
